@@ -1,0 +1,8 @@
+TODO:
+- add controls
+- add simplex noise to terrain
+- add textures
+- add bump maps 
+- load objects
+- spawn trees
+
