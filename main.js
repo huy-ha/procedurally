@@ -23,16 +23,46 @@ function init(){
 	orbitControl = new THREE.OrbitControls( camera , renderer.domElement);
 	control = new function(){
 		this.rotationSpeed = 0.5;
-		this.x = 10;
-		this.y = 10;
-		this.z = 10;
+		// this.x = 0;
+		// this.y = 0;
+		// this.z = 0;
 	};
+
 	createPlane();
 	addLights();
+
+	var loader = new THREE.GLTFLoader();
+	loader.load( 'assets/Tree_1.glb', createTrees, 
+		undefined, 
+		function ( error ) {
+			console.error( error );
+		} );
 	addStats();
 	addGui(control);
 	// addHelpers();
 	animate();
+}
+
+function createTrees(glb){
+	let trees = new THREE.Group();
+	let scale = 0.2;
+	let plane = scene.getObjectByName("plane");
+	let count = plane.geometry.attributes.position.count;
+	let pos = plane.geometry.attributes.position.array;
+	let tree = glb.scene;
+	tree.rotation.x = Math.PI/2;
+	tree.scale.set(scale,scale,scale);
+	
+	let n = Math.random()*30 + 200;
+	for( let i = 0; i < n; i++){
+		let value = Math.floor(Math.random()*count);
+		tree.position.set( pos[value*3] , pos[value*3+1],pos[value*3+2]);
+		let cloneTree = tree.clone();
+		trees.add( cloneTree );
+	}
+	trees.position.set(0,2,0);
+	console.log(tree.position);
+	plane.add(trees);
 }
 
 function createPlane(){
@@ -84,7 +114,7 @@ function createPlane(){
 	let materialColor = new THREE.TextureLoader().load("assets/Rough_rock_023_COLOR.jpg");
 	materialColor.wrapS = materialColor.wrapT = THREE.RepeatWrapping;
 	materialColor.repeat.set(8, 8);
-	let materialNorm = new THREE.TextureLoader().load("assets/Rough_rock_023_NRM.jpg");
+	let materialNorm = new THREE.TextureLoader().load("assets/Rough_Rock_023_NORM.jpg");
 	materialNorm.wrapS = materialNorm.wrapT = THREE.RepeatWrapping;
 	materialNorm.repeat.set(8, 8);
 	material.map = materialColor;
@@ -201,9 +231,9 @@ function addStats(){
 function addGui(control){
 	let gui = new dat.GUI();
 	gui.add(control, "rotationSpeed", -1, 1);
-	gui.add(control, "x", -100, 100);
-	gui.add(control, "y", -100, 100);
-	gui.add(control, "z", -100, 100);
+	// gui.add(control, "x", -10, 10);
+	// gui.add(control, "y", -10, 10);
+	// gui.add(control, "z", -10, 10);
 }
 
 function addHelpers(){
@@ -218,7 +248,7 @@ function animate(){
 	scene.getObjectByName("plane").rotation.z += control.rotationSpeed/500;
 	requestAnimationFrame(animate);
 	renderer.render(scene,camera);
-	directLight.position.set( control.x , control.y , control.z);
+	// scene.getObjectByName("plane").children[5].position.set( control.x , control.y , control.z);
 	stats.update();
 	orbitControl.update();
 }
