@@ -13,14 +13,6 @@ let p = [151,160,137,91,90,15,
   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
 
 
-for (let i = 0; i < Math.random()*200 +100; i++){
-    let a = Math.floor(Math.random()*256);
-    let b = Math.floor(Math.random()*256);
-    let temp = p[a];
-    p[a] = p[b];
-    p[b] = temp;
-}
-
 function Grad (x,y,z){
     this.x = x;
     this.y = y;
